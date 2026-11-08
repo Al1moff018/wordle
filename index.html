@@ -1,0 +1,675 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101426">
+<title>Al1moff Wordle</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg: #101426;
+    --panel: #191f35;
+    --panel2: #202943;
+    --text: #f4f6ff;
+    --muted: #929bb7;
+    --border: #303954;
+    --green: #38c98b;
+    --yellow: #e8b94d;
+    --gray: #505a70;
+    --accent: #8b72ff;
+    --accent2: #39c7e8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 10% 0%, #35276c 0, transparent 32%),
+        radial-gradient(circle at 100% 100%, #123d55 0, transparent 30%),
+        var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    padding: 24px;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+    border: none;
+}
+
+.app {
+    max-width: 1050px;
+    margin: auto;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 5px 25px #6e62ff55;
+}
+
+.logo span {
+    background: linear-gradient(90deg, #a997ff, #4ed8e9);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    font-size: 18px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 13px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.profile span {
+    color: var(--yellow);
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: linear-gradient(145deg, #202943, #171d31);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 17px;
+}
+
+.stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.stat-icon {
+    font-size: 21px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.progress-track {
+    width: 100%;
+    height: 6px;
+    background: #343d56;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    transition: width .4s;
+}
+
+.game-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 290px;
+    gap: 20px;
+    align-items: start;
+}
+
+.game-panel,
+.side-card {
+    background: linear-gradient(145deg, #1c243b, #151b2e);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+}
+
+.game-panel {
+    padding: 25px;
+    text-align: center;
+}
+
+.game-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.game-heading h1 {
+    font-size: 23px;
+    font-weight: 900;
+}
+
+.level-badge {
+    background: #806bff22;
+    color: #b5a7ff;
+    border: 1px solid #806bff66;
+    padding: 7px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 23px;
+}
+
+.message {
+    min-height: 25px;
+    color: var(--yellow);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.board {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    gap: 7px;
+    width: min(100%, 330px);
+    margin: 0 auto 23px;
+}
+
+.board-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 7px;
+}
+
+.tile {
+    aspect-ratio: 1;
+    border: 2px solid #3b4561;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    font-size: clamp(20px, 5vw, 27px);
+    font-weight: 900;
+    text-transform: uppercase;
+    transition: .2s;
+    background: #202943;
+}
+
+.tile.filled {
+    border-color: #8290b5;
+    animation: pop .12s ease;
+}
+
+.tile.correct {
+    background: var(--green);
+    border-color: var(--green);
+    color: #081b14;
+}
+
+.tile.present {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: #241b08;
+}
+
+.tile.absent {
+    background: var(--gray);
+    border-color: var(--gray);
+    color: white;
+}
+
+.tile.flip {
+    animation: flip .45s ease;
+}
+
+@keyframes pop {
+    50% { transform: scale(1.08); }
+}
+
+@keyframes flip {
+    0% { transform: rotateX(0); }
+    50% { transform: rotateX(90deg); }
+    100% { transform: rotateX(0); }
+}
+
+.keyboard {
+    max-width: 490px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.key {
+    min-width: 0;
+    flex: 1;
+    height: 48px;
+    border-radius: 7px;
+    background: #39435d;
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    transition: .15s;
+}
+
+.key:hover {
+    filter: brightness(1.2);
+}
+
+.key.wide {
+    flex: 1.5;
+    font-size: 11px;
+}
+
+.key.correct {
+    background: var(--green);
+    color: #092016;
+}
+
+.key.present {
+    background: var(--yellow);
+    color: #251b08;
+}
+
+.key.absent {
+    background: #252d40;
+    color: #8790a5;
+}
+
+.game-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 20px;
+}
+
+.action-btn {
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    color: white;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+}
+
+.action-btn.primary {
+    background: linear-gradient(100deg, #806bff, #35b9dc);
+    border: none;
+}
+
+.action-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.side {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.side-card {
+    padding: 19px;
+}
+
+.side-card h3 {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.side-card p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.side-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 13px;
+    font-size: 12px;
+}
+
+.side-row span:last-child {
+    font-weight: 800;
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.legend-box {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+}
+
+.green { background: var(--green); }
+.yellow { background: var(--yellow); }
+.gray { background: var(--gray); }
+
+.history {
+    max-height: 145px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.history-item {
+    background: #27314b;
+    border: 1px solid var(--border);
+    padding: 6px 9px;
+    border-radius: 7px;
+    font-size: 11px;
+    color: #c6d0e9;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: #080b16cc;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    width: min(100%, 390px);
+    background: #1c243b;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    text-align: center;
+    animation: pop .25s ease;
+}
+
+.modal-content h2 {
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.modal-word {
+    font-size: 35px;
+    font-weight: 900;
+    letter-spacing: 7px;
+    color: var(--green);
+    margin: 20px 0;
+}
+
+.modal-content p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+footer {
+    text-align: center;
+    color: #69738f;
+    font-size: 11px;
+    margin-top: 28px;
+}
+
+footer strong {
+    color: #a99aff;
+}
+
+@media(max-width: 780px) {
+    body { padding: 15px; }
+    .game-layout { grid-template-columns: 1fr; }
+    .side { display: grid; grid-template-columns: 1fr 1fr; }
+    .dashboard { gap: 8px; }
+    .stat-card { padding: 12px; }
+    .stat-value { font-size: 21px; }
+}
+
+@media(max-width: 450px) {
+    header { margin-bottom: 23px; }
+    .logo { font-size: 18px; }
+    .logo-icon { width: 36px; height: 36px; }
+    .profile { padding: 8px; font-size: 11px; }
+    .dashboard { grid-template-columns: 1fr 1fr; }
+    .dashboard .stat-card:last-child { grid-column: span 2; }
+    .game-panel { padding: 15px 10px; }
+    .game-heading h1 { font-size: 19px; }
+    .tile { border-radius: 6px; }
+    .key { height: 43px; font-size: 11px; }
+    .side { grid-template-columns: 1fr; }
+}
+
+@media(prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+    <div class="logo">
+        <div class="logo-icon">W</div>
+        <div>AL1MOFF <span>WORDLE</span></div>
+    </div>
+
+    <div class="header-right">
+        <div class="profile">🪙 <span id="coinHeader">0</span></div>
+        <button class="icon-btn" id="resetStats" title="Reset statistics">↻</button>
+    </div>
+</header>
+
+<section class="dashboard">
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">CURRENT LEVEL</span>
+            <span class="stat-icon">🏆</span>
+        </div>
+        <div class="stat-value" id="levelValue">1</div>
+        <div class="progress-track">
+            <div class="progress-fill" id="xpProgress"></div>
+        </div>
+        <div class="stat-label" id="xpText" style="margin-top:7px">0 / 100 XP</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">TOTAL WINS</span>
+            <span class="stat-icon">⭐</span>
+        </div>
+        <div class="stat-value" id="winsValue">0</div>
+        <div class="stat-label">Words discovered</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">WIN STREAK</span>
+            <span class="stat-icon">🔥</span>
+        </div>
+        <div class="stat-value" id="streakValue">0</div>
+        <div class="stat-label">Consecutive wins</div>
+    </div>
+</section>
+
+<main class="game-layout">
+
+<section class="game-panel">
+    <div class="game-heading">
+        <h1>Guess the word</h1>
+        <span class="level-badge" id="levelBadge">LEVEL 1</span>
+    </div>
+
+    <p class="subtitle" id="levelDescription">
+        Find the hidden 5-letter English word.
+    </p>
+
+    <div class="message" id="message">Good luck! Let's play.</div>
+
+    <div class="board" id="board"></div>
+
+    <div class="keyboard" id="keyboard"></div>
+
+    <div class="game-actions">
+        <button class="action-btn" id="hintBtn">💡 Hint · 30 coins</button>
+        <button class="action-btn primary" id="newGameBtn">New game ↗</button>
+    </div>
+</section>
+
+<aside class="side">
+
+    <div class="side-card">
+        <h3>📊 Your statistics</h3>
+        <div class="side-row">
+            <span>Games played</span>
+            <span id="gamesValue">0</span>
+        </div>
+        <div class="side-row">
+            <span>Win rate</span>
+            <span id="rateValue">0%</span>
+        </div>
+        <div class="side-row">
+            <span>Coins earned</span>
+            <span id="earnedValue">0</span>
+        </div>
+        <div class="side-row">
+            <span>Words left</span>
+            <span id="remainingValue">0</span>
+        </div>
+    </div>
+
+    <div class="side-card">
+        <h3>🎨 How to play</h3>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box green"></div>
+                Correct letter and position
+            </div>
+            <div class="legend-item">
+                <div class="legend-box yellow"></div>
+                Letter exists, wrong position
+            </div>
+            <div class="legend-item">
+                <div class="legend-box gray"></div>
+                Letter is not in the word
+            </div>
+        </div>
+    </div>
+
+    <div class="side-card" style="grid-column: 1 / -1">
+        <h3>📚 Discovered words</h3>
+        <div class="history" id="history">
+            <p>No words discovered yet.</p>
+        </div>
+    </div>
+
+</aside>
+</main>
+
+<footer>
+    Made for curious minds · <strong>Al1moff Dev</strong>
+</footer>
+</div>
+
+<div class="modal" id="resultModal">
+    <div class="modal-content">
+        <h2 id="resultTitle">Excellent!</h2>
+        <p id="resultDescription"></p>
+        <div class="modal-word" id="resultWord">APPLE</div>
+        <p id="rewardText"></p>
+        <button class="action-btn primary" id="continueBtn">Continue playing →</button>
+    </div>
+</div>
+
+<!-- WORD DATABASE: JSON -->
+<script src="./app.js" defer></script>
+</body>
+</html>
